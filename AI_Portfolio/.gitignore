@@ -1,0 +1,22 @@
+# Environments
+venv/
+env/
+
+# Python caching
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database
+db.sqlite3
+
+# Environment variables (අනිවාර්යයෙන්ම!)
+.env
+
+# Static & Media
+staticfiles/
+media/
+
+# OS generated files
+.DS_Store
+Thumbs.db

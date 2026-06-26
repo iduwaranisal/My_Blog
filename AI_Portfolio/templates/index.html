@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ hero.name|default:"Iduwara Nisal" }} | AI Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0d0d0d; color: #ffffff; font-family: 'Inter', sans-serif; }
+        .glow-btn { box-shadow: 0 0 20px rgba(76, 175, 80, 0.4); }
+    </style>
+</head>
+<body class="antialiased selection:bg-green-500 selection:text-white scroll-smooth">
+
+    <!-- Navigation Bar -->
+    <nav class="container mx-auto px-6 py-8 flex justify-between items-center text-sm">
+        <div class="text-2xl font-extrabold tracking-wider text-white">IN.</div>
+        
+        <div class="hidden md:flex space-x-10 text-gray-400 font-medium">
+            <a href="#" class="text-white transition">Home</a>
+            <a href="#case-studies" class="hover:text-white transition">Case Studies</a>
+            <a href="#about" class="hover:text-white transition">About</a>
+            <a href="#contact" class="hover:text-white transition">Get In Touch</a>
+        </div>
+        
+        <div class="flex space-x-6 text-gray-400 font-medium">
+            {% if hero.linkedin_link %}
+                <a href="{{ hero.linkedin_link }}" target="_blank" class="hover:text-white transition">LinkedIn</a>
+            {% endif %}
+            
+            {% if hero.github_link %}
+                <a href="{{ hero.github_link }}" target="_blank" class="hover:text-white transition">GitHub</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 py-20 flex flex-col-reverse md:flex-row items-center justify-between">
+        <div class="md:w-1/2 mt-16 md:mt-0">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
+                {{ hero.name|default:"Your Name" }}
+            </h1>
+            <p class="text-lg text-gray-400 mb-8 leading-relaxed max-w-lg">
+                {{ hero.title|default:"Your Title Here" }} <br><br>
+                {{ hero.description|default:"Your description goes here."|linebreaksbr }}
+            </p>
+            
+            <a href="#case-studies" class="glow-btn inline-block bg-[#4CAF50] hover:bg-green-500 text-white font-semibold py-3 px-8 rounded-md transition duration-300">
+                Let's get started →
+            </a>
+            
+            <div class="flex flex-wrap gap-6 mt-16 text-sm text-gray-400 font-medium border-t border-gray-800 pt-8 max-w-lg">
+                {% if hero.location %}
+                <div class="flex items-center gap-2 border border-gray-800 px-4 py-2 rounded-full">
+                    📍 {{ hero.location }}
+                </div>
+                {% endif %}
+                {% if hero.degree %}
+                <div class="flex items-center gap-2 border border-gray-800 px-4 py-2 rounded-full">
+                    🎓 {{ hero.degree }}
+                </div>
+                {% endif %}
+                {% if hero.interest %}
+                <div class="flex items-center gap-2 border border-gray-800 px-4 py-2 rounded-full">
+                    🤖 {{ hero.interest }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="md:w-1/2 flex justify-center md:justify-end">
+            <div class="relative">
+                {% if hero.profile_image %}
+                    <img src="{{ hero.profile_image.url }}" alt="{{ hero.name }}" class="rounded-full w-72 h-72 md:w-96 md:h-96 object-cover border border-gray-700 relative z-10">
+                {% else %}
+                    <div class="rounded-full w-72 h-72 md:w-96 md:h-96 border border-gray-700 relative z-10 bg-gray-800 flex items-center justify-center text-gray-500">No Image</div>
+                {% endif %}
+                <div class="absolute inset-0 rounded-full bg-green-500/10 blur-3xl -z-10 scale-110"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="container mx-auto px-6 py-24 border-t border-gray-900">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-8 text-white">{{ about.heading|default:"Behind the Screen" }}</h2>
+            <p class="text-gray-400 leading-relaxed text-lg mb-6">
+                {{ about.paragraph_1|default:"Add paragraph 1 from admin." }}
+            </p>
+            <p class="text-gray-400 leading-relaxed text-lg">
+                {{ about.paragraph_2|default:"Add paragraph 2 from admin." }}
+            </p>
+        </div>
+    </section>
+
+    <!-- Case Studies / Projects Section -->
+    <section id="case-studies" class="bg-[#111111] py-24">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl font-bold mb-4 text-white">Case Studies</h2>
+                <p class="text-gray-400">Deep dives into intelligent systems and data-driven solutions I've built.</p>
+            </div>
+
+            {% for project in projects %}
+            <!-- forloop.counter|divisibleby:2 එකෙන් අපි එක project එකක් වමටත් අනිත් එක දකුණටත් මාරු කරනවා (Zig-zag layout) -->
+            <div class="flex flex-col {% if forloop.counter|divisibleby:2 %}lg:flex-row-reverse{% else %}lg:flex-row{% endif %} items-center mb-24 gap-12 lg:gap-20">
+                <div class="lg:w-1/2">
+                    <span class="inline-block bg-blue-500/20 text-blue-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">{{ project.category }}</span>
+                    <h3 class="text-3xl font-bold mb-4 text-white">{{ project.title }}</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        {{ project.description }}
+                    </p>
+                    <div class="flex flex-wrap gap-3 mb-8 text-sm font-medium text-gray-500">
+                        {% for tech in project.tech_list %}
+                            <span class="bg-gray-800 px-3 py-1 rounded-md">{{ tech }}</span>
+                        {% endfor %}
+                    </div>
+                    {% if project.project_link %}
+                    <a href="{{ project.project_link }}" target="_blank" class="glow-btn inline-block bg-[#4CAF50] hover:bg-green-500 text-white font-medium py-3 px-8 rounded-md transition duration-300">
+                        View Project →
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="lg:w-1/2 w-full">
+                    {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.title }}" class="rounded-xl shadow-2xl border border-gray-800 w-full object-cover aspect-video opacity-90 hover:opacity-100 transition duration-300">
+                    {% else %}
+                        <div class="rounded-xl shadow-2xl border border-gray-800 w-full aspect-video bg-gray-800 flex items-center justify-center text-gray-500">No Image Uploaded</div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+                <p class="text-center text-gray-500">No projects added yet. Add some from the Admin panel!</p>
+            {% endfor %}
+
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="container mx-auto px-6 py-24">
+        <div class="max-w-2xl mx-auto bg-[#141414] p-10 md:p-14 rounded-2xl border border-gray-800 shadow-2xl">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold mb-4 text-white">Get in Touch</h2>
+                <p class="text-gray-400">
+                    Always down to connect with fellow devs, researchers, or anyone building cool things. Drop a message!
+                </p>
+            </div>
+            
+            {% if messages %}
+                {% for message in messages %}
+                <div class="bg-green-500/20 text-green-400 p-4 rounded-lg mb-6 text-center border border-green-500/30">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" action="{% url 'home' %}#contact" class="space-y-6">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Name</label>
+                    <input type="text" name="name" required class="w-full bg-[#0d0d0d] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-green-500 transition duration-300">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                    <input type="email" name="email" required class="w-full bg-[#0d0d0d] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-green-500 transition duration-300">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-2">Message</label>
+                    <textarea name="message" rows="5" required class="w-full bg-[#0d0d0d] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-green-500 transition duration-300"></textarea>
+                </div>
+                <button type="submit" class="glow-btn w-full bg-[#4CAF50] hover:bg-green-500 text-white font-bold py-4 rounded-lg transition duration-300 mt-4">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-8 text-gray-600 text-sm border-t border-gray-900 bg-[#0d0d0d]">
+        <p>&copy; 2026 {{ hero.name|default:"Iduwara Nisal" }}. Built with Django & Tailwind CSS.</p>
+    </footer>
+
+</body>
+</html>
